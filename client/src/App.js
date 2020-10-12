@@ -13,7 +13,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React I'm DOING ITTTTTT
+          Link to docs
         </a>
       </header>
     </div>
