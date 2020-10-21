@@ -4,6 +4,9 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
+const mongoose = require("mongoose");
+const uri =
+  "mongodb+srv://alex:bubblegum76@rtca.jff2l.mongodb.net/RTCA?retryWrites=true&w=majority";
 
 var indexRouter = require("./routes/index");
 var loginRouter = require("./routes/login");
@@ -22,6 +25,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", function () {
+  console.log("connected");
+});
 
 app.use("/", indexRouter);
 app.use("/login", loginRouter);

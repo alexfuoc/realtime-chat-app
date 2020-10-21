@@ -1,39 +1,107 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import "./App.css";
-import {Grid, Button, CssBaseline} from "@material-ui/core";
+import { Grid, Button, CssBaseline, TextField } from "@material-ui/core";
+
+class SignupForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      username: "",
+      password: "",
+    };
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({ [name]: value });
+  }
+
+  handleSubmit(event) {
+    this.props.callAPI();
+    alert(
+      "A username was submitted: " +
+        this.state.username +
+        ", An email was submitted: " +
+        this.state.email +
+        ", A password was submitted: " +
+        this.state.password
+    );
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <TextField
+          id="outlined-name"
+          name="username"
+          label="Username"
+          value={this.state.username}
+          onChange={this.handleInputChange}
+          variant="outlined"
+        />
+        <TextField
+          id="outlined-name"
+          name="email"
+          label="Email"
+          value={this.state.email}
+          onChange={this.handleInputChange}
+          variant="outlined"
+        />
+        <TextField
+          id="outlined-name"
+          name="password"
+          label="Password"
+          value={this.state.password}
+          onChange={this.handleInputChange}
+          variant="outlined"
+        />
+        <Button type="submit" value="Submit">
+          Register
+        </Button>
+      </form>
+    );
+  }
+}
 
 class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {apiResponse: ""};
+    this.state = { apiResponse: "" };
     // this.callAPI = this.callAPI.bind(this);
   }
 
   callAPI() {
     let params = {
-      email: 'test@gmail.com',
-      username: 'username_here',
-      password: 'hunter2',
+      email: "test3@gmail.com",
+      username: "username_here",
+      password: "hunter2",
     };
 
     fetch("http://localhost:3001/login/signup/", {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(params),
-    }).then((res) => res.text())
-      .then((res) => this.setState({apiResponse: res}));
+    })
+      .then((res) => res.text())
+      .then((res) => console.log(res));
   }
 
-  componentDidMount() {
-    this.callAPI();
-  }
+  componentDidMount() {}
 
   render() {
-    const {apiResponse} = this.state;
+    const { apiResponse } = this.state;
 
     return (
       <React.Fragment>
@@ -64,6 +132,10 @@ class App extends Component {
                 </Button>
               </Grid>
               <p>{apiResponse}</p>
+              <SignupForm
+                callAPI={this.callAPI}
+                apiResponse={this.props.apiResponse}
+              />
             </header>
           </div>
         </CssBaseline>
