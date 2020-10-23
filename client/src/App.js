@@ -1,6 +1,13 @@
 import React, { Component } from "react";
 import "./App.css";
-import { Grid, Button, CssBaseline, TextField } from "@material-ui/core";
+import {
+  Grid,
+  Button,
+  CssBaseline,
+  TextField,
+  Card,
+  CardContent,
+} from "@material-ui/core";
 
 class SignupForm extends Component {
   constructor(props) {
@@ -38,35 +45,48 @@ class SignupForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <TextField
-          id="outlined-name"
-          name="username"
-          label="Username"
-          value={this.state.username}
-          onChange={this.handleInputChange}
-          variant="outlined"
-        />
-        <TextField
-          id="outlined-name"
-          name="email"
-          label="Email"
-          value={this.state.email}
-          onChange={this.handleInputChange}
-          variant="outlined"
-        />
-        <TextField
-          id="outlined-name"
-          name="password"
-          label="Password"
-          value={this.state.password}
-          onChange={this.handleInputChange}
-          variant="outlined"
-        />
-        <Button type="submit" value="Submit">
-          Register
-        </Button>
-      </form>
+      <Grid container direction="column" justify="center" spacing={10}>
+        <form onSubmit={this.handleSubmit}>
+          <Grid item>
+            <TextField
+              id="outlined-username"
+              name="username"
+              label="Username"
+              value={this.state.username}
+              onChange={this.handleInputChange}
+              variant="outlined"
+              p={2}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              id="outlined-email"
+              name="email"
+              label="Email"
+              value={this.state.email}
+              onChange={this.handleInputChange}
+              variant="outlined"
+              p={2}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              id="outlined-password"
+              name="password"
+              label="Password"
+              value={this.state.password}
+              onChange={this.handleInputChange}
+              variant="outlined"
+              p={2}
+            />
+          </Grid>
+          <Grid item>
+            <Button type="submit" value="Submit">
+              Register
+            </Button>
+          </Grid>
+        </form>
+      </Grid>
     );
   }
 }
