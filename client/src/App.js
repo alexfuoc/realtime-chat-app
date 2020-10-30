@@ -1,109 +1,36 @@
 import React, { Component } from "react";
 import "./App.css";
-import {
-  Grid,
-  Button,
-  CssBaseline,
-  TextField,
-  Card,
-  CardContent,
-} from "@material-ui/core";
-
-class SignupForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: "",
-      username: "",
-      password: "",
-    };
-
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleInputChange(event) {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
-    this.setState({ [name]: value });
-  }
-
-  handleSubmit(event) {
-    this.props.callAPI();
-    alert(
-      "A username was submitted: " +
-        this.state.username +
-        ", An email was submitted: " +
-        this.state.email +
-        ", A password was submitted: " +
-        this.state.password
-    );
-    event.preventDefault();
-  }
-
-  render() {
-    return (
-      <Grid container direction="column" justify="center" spacing={10}>
-        <form onSubmit={this.handleSubmit}>
-          <Grid item>
-            <TextField
-              id="outlined-username"
-              name="username"
-              label="Username"
-              value={this.state.username}
-              onChange={this.handleInputChange}
-              variant="outlined"
-              p={2}
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              id="outlined-email"
-              name="email"
-              label="Email"
-              value={this.state.email}
-              onChange={this.handleInputChange}
-              variant="outlined"
-              p={2}
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              id="outlined-password"
-              name="password"
-              label="Password"
-              value={this.state.password}
-              onChange={this.handleInputChange}
-              variant="outlined"
-              p={2}
-            />
-          </Grid>
-          <Grid item>
-            <Button type="submit" value="Submit">
-              Register
-            </Button>
-          </Grid>
-        </form>
-      </Grid>
-    );
-  }
-}
+import { Grid, Button, CssBaseline, TextField } from "@material-ui/core";
+import LoginForm from "./components/login";
+import SignupForm from "./components/signUp";
 
 class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { apiResponse: "" };
-    // this.callAPI = this.callAPI.bind(this);
+    this.state = {
+      apiResponse: "",
+      loginState: false,
+      signUpState: false,
+    };
+    this.callAPI = this.callAPI.bind(this);
+    this.handleLoginClick = this.handleLoginClick(this);
+    this.handleSignUpClick = this.handleSignUpClick(this);
   }
 
-  callAPI() {
+  handleLoginClick() {
+    this.setState({ loginState: true });
+  }
+
+  handleSignUpClick() {
+    this.setState({ signUpState: true });
+  }
+
+  callAPI(email, username, password) {
     let params = {
-      email: "test3@gmail.com",
-      username: "username_here",
-      password: "hunter2",
+      email,
+      username,
+      password,
     };
 
     fetch("http://localhost:3001/login/signup/", {
@@ -121,7 +48,7 @@ class App extends Component {
   componentDidMount() {}
 
   render() {
-    const { apiResponse } = this.state;
+    const { apiResponse, loginState, signUpState } = this.state;
 
     return (
       <React.Fragment>
@@ -135,28 +62,30 @@ class App extends Component {
                 direction="row"
                 justify="center"
                 alignItems="center"
+                spacing={3}
               >
-                <Button
-                  onClick={() => {
-                    alert("clicked log in");
-                  }}
-                >
-                  Login
-                </Button>
-                <Button
-                  onClick={() => {
-                    alert("clicked Register");
-                  }}
-                >
-                  Register
-                </Button>
+                <Grid item>
+                  <Button onClick={this.handleLoginClick}>Login</Button>
+                </Grid>
+                <Grid item>
+                  <Button onClick={this.handleSignUpClick}>Sign Up</Button>
+                </Grid>
               </Grid>
-              <p>{apiResponse}</p>
-              <SignupForm
-                callAPI={this.callAPI}
-                apiResponse={this.props.apiResponse}
-              />
             </header>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              spacing={3}
+            >
+              <Grid item>
+                <SignupForm />
+              </Grid>
+              <Grid item>
+                <LoginForm />
+              </Grid>
+            </Grid>
           </div>
         </CssBaseline>
       </React.Fragment>
