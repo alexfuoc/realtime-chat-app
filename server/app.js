@@ -4,12 +4,16 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
-
+const { v4: uuidV4 } = require("uuid");
+var bodyParser = require("body-parser");
+const session = require("express-session");
+const FileStore = require("session-file-store")(session);
 const passport = require("passport");
 require("./passport");
 const mongoose = require("mongoose");
 const uri =
   "mongodb+srv://alex:bubblegum76@rtca.jff2l.mongodb.net/RTCA?retryWrites=true&w=majority";
+const SECRET = "BFNdfsafdOBUJla253nmdsa455vndf";
 
 var indexRouter = require("./routes/index");
 var loginRouter = require("./routes/login");
@@ -28,6 +32,23 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(
+  session({
+    genid: (req) => {
+      console.log("Inside the session middleware");
+      console.log(req.sessionID);
+      return uuidV4(); // use UUIDs for session IDs
+    },
+    store: new FileStore(),
+    secret: SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -43,6 +64,16 @@ app.use("/", indexRouter);
 app.use("/login", loginRouter);
 app.use("/users", usersRouter);
 app.use("/testAPI", testAPIRouter);
+
+app.get("/authrequired", (req, res) => {
+  console.log("Inside GET /authrequired callback");
+  console.log(`User authenticated? ${req.isAuthenticated()}`);
+  if (req.isAuthenticated()) {
+    res.json({ message: "You hit the authentication endpoint." });
+  } else {
+    res.json({ message: "Unsuccessful. Need to login." });
+  }
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

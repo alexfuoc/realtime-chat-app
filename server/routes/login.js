@@ -1,7 +1,6 @@
 var express = require("express");
 var router = express.Router();
 var bcrypt = require("bcrypt");
-var jwt = require("jsonwebtoken");
 var passport = require("passport");
 var User = require("../models/user");
 
@@ -57,7 +56,6 @@ router.post("/signup/", function (req, res, next) {
     if (err) {
       console.log(err);
     }
-
     if (!user) {
       signup(params.email, params.username, params.password)
         .then((r) => res.json({ message: "Success" }))
@@ -79,24 +77,33 @@ router.post("/signup/", function (req, res, next) {
 });
 
 router.post("/", function (req, res, next) {
-  let params = req.body;
-  console.log(params);
-
-  passport.authenticate("local", { session: false }, (err, user, info) => {
-    if (err || !user) {
-      return res.status(400).json({
-        message: "Something is not right",
-        user: user,
-      });
-    }
-    req.login(user, { session: false }, (err) => {
+  console.log("Inside POST /login callback");
+  passport.authenticate("local", (err, user, info) => {
+    console.log("Inside passport.authenticate() callback");
+    console.log(
+      `req.session.passport: ${JSON.stringify(req.session.passport)}`
+    );
+    console.log(`req.user: ${JSON.stringify(req.user)}`);
+    // if (err) {
+    //   console.log("Error Inside passport.authenticate() callback");
+    //   return res.status(400).json({
+    //     message: "Something is not right",
+    //     user: user,
+    //   });
+    // }
+    req.login(user, (err) => {
+      console.log("Inside req.login() callback");
+      console.log(
+        `req.session.passport: ${JSON.stringify(req.session.passport)}`
+      );
+      console.log(`req.user: ${JSON.stringify(req.user)}`);
       if (err) {
-        res.send(err);
+        console.log("Error Inside req.login() callback");
+        res.json({ error: err });
       }
-      // generate a signed son web token with the contents of user object and return it in the response
-      const token = jwt.sign(user, "your_jwt_secret");
-      return res.json({ user, token });
+      return res.json({ message: "Logged in." });
     });
-  })(req, res);
+  })(req, res, next);
 });
+
 module.exports = router;

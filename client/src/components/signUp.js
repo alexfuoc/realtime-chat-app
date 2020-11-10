@@ -63,55 +63,58 @@ class SignupForm extends Component {
     const { apiResponse } = this.state;
 
     return (
-      <form onSubmit={this.handleSubmit}>
-        <Grid
-          container
-          direction="column"
-          justify="flex-start"
-          alignItems="center"
-          spacing={3}
-        >
-          {apiResponse ? <p>{apiResponse}</p> : <p>Sign Up</p>}
-          <Grid item>
-            <TextField
-              id="outlined-email"
-              name="email"
-              label="Email"
-              value={this.state.email}
-              onChange={this.handleInputChange}
-              variant="outlined"
-              p={2}
-            />
+      <div className="App">
+        <h2 className="title">Chatty Dorothy's</h2>
+        <form onSubmit={this.handleSubmit}>
+          <Grid
+            container
+            direction="column"
+            justify="flex-start"
+            alignItems="center"
+            spacing={3}
+          >
+            {apiResponse ? <p>{apiResponse}</p> : <p>Sign Up</p>}
+            <Grid item>
+              <TextField
+                id="outlined-email"
+                name="email"
+                label="Email"
+                value={this.state.email}
+                onChange={this.handleInputChange}
+                variant="outlined"
+                p={2}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                id="outlined-username"
+                name="username"
+                label="Username"
+                value={this.state.username}
+                onChange={this.handleInputChange}
+                variant="outlined"
+                p={2}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                id="outlined-password"
+                name="password"
+                label="Password"
+                value={this.state.password}
+                onChange={this.handleInputChange}
+                variant="outlined"
+                p={2}
+              />
+            </Grid>
+            <Grid item>
+              <Button type="submit" value="Submit">
+                Sign Up
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item>
-            <TextField
-              id="outlined-username"
-              name="username"
-              label="Username"
-              value={this.state.username}
-              onChange={this.handleInputChange}
-              variant="outlined"
-              p={2}
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              id="outlined-password"
-              name="password"
-              label="Password"
-              value={this.state.password}
-              onChange={this.handleInputChange}
-              variant="outlined"
-              p={2}
-            />
-          </Grid>
-          <Grid item>
-            <Button type="submit" value="Submit">
-              Sign Up
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
+        </form>
+      </div>
     );
   }
 }

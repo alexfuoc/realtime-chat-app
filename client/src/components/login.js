@@ -41,7 +41,7 @@ export default class LoginForm extends Component {
   }
 
   handleSubmit(event) {
-    this.props.callAPI(this.state.email, this.state.password);
+    this.callAPI(this.state.email, this.state.password);
     alert(
       "An email was submitted: " +
         this.state.email +
@@ -53,43 +53,47 @@ export default class LoginForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <Grid
-          container
-          direction="column"
-          justify="flex-start"
-          alignItems="center"
-          spacing={3}
-        >
-          <Grid item>
-            <TextField
-              id="outlined-email"
-              name="email"
-              label="Email"
-              value={this.state.email}
-              onChange={this.handleInputChange}
-              variant="outlined"
-              p={2}
-            />
+      <div className="App">
+        <h2 className="title">Chatty Dorothy's</h2>
+        <p className="eggplant">Are you a friend of Dorothy?</p>
+        <form onSubmit={this.handleSubmit}>
+          <Grid
+            container
+            direction="column"
+            justify="flex-start"
+            alignItems="center"
+            spacing={3}
+          >
+            <Grid item>
+              <TextField
+                id="outlined-email"
+                name="email"
+                label="Email"
+                value={this.state.email}
+                onChange={this.handleInputChange}
+                variant="outlined"
+                p={2}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                id="outlined-password"
+                name="password"
+                label="Password"
+                value={this.state.password}
+                onChange={this.handleInputChange}
+                variant="outlined"
+                p={2}
+              />
+            </Grid>
+            <Grid item>
+              <Button type="submit" value="Submit">
+                Log In
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item>
-            <TextField
-              id="outlined-password"
-              name="password"
-              label="Password"
-              value={this.state.password}
-              onChange={this.handleInputChange}
-              variant="outlined"
-              p={2}
-            />
-          </Grid>
-          <Grid item>
-            <Button type="submit" value="Submit">
-              Log In
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
+        </form>
+      </div>
     );
   }
 }
