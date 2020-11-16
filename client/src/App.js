@@ -1,10 +1,16 @@
 import React, { Component } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import LoginForm from "./components/login";
 import SignupForm from "./components/signUp";
+import Chat from "./components/chatbox";
 import Home from "./components/home";
-import io from 'socket.io-client';
+import { UserProvider } from "./contexts/Auth";
 
 class App extends Component {
   constructor(props) {
@@ -30,17 +36,12 @@ class App extends Component {
       .then((res) => console.log(res));
   }
 
-  componentDidMount() {
-    var socket = io();
-    socket.on('chat message', msg =>{
-      console.log(msg);
-    })
-    socket.emit('chat message', 'Hello world! This is a chat message');
-  }
+  componentDidMount() {}
 
   render() {
     return (
       <Router>
+        <Chat />
         <Switch>
           <Route exact path="/">
             <Home />

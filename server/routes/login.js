@@ -101,7 +101,14 @@ router.post("/", function (req, res, next) {
         console.log("Error Inside req.login() callback");
         res.json({ error: err });
       }
-      return res.json({ message: "Logged in." });
+      return res.json({
+        user: {
+          _id: req.user._id,
+          email: req.user.email,
+          username: req.user.username,
+        },
+        message: "Logged in.",
+      });
     });
   })(req, res, next);
 });

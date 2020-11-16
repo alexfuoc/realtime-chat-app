@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Button, CssBaseline, TextField } from "@material-ui/core";
-import LoginForm from "./login";
-import SignupForm from "./signUp";
+import { Grid, Button, CssBaseline } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
 export default class Home extends Component {
