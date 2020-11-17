@@ -10,7 +10,27 @@ import LoginForm from "./components/login";
 import SignupForm from "./components/signUp";
 import Chat from "./components/chatbox";
 import Home from "./components/home";
-import { UserProvider } from "./contexts/Auth";
+import { AuthProvider, AuthConsumer } from "./contexts/Auth";
+
+// function PrivateRoute({ children, ...rest }) {
+//   return (
+//     <Route
+//       {...rest}
+//       render={({ location }) =>
+//         auth.user ? (
+//           children
+//         ) : (
+//           <Redirect
+//             to={{
+//               pathname: "/login",
+//               state: { from: location },
+//             }}
+//           />
+//         )
+//       }
+//     />
+//   );
+// }
 
 class App extends Component {
   constructor(props) {
@@ -40,20 +60,22 @@ class App extends Component {
 
   render() {
     return (
-      <Router>
-        <Chat />
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route path="/login">
-            <LoginForm />
-          </Route>
-          <Route path="/signup">
-            <SignupForm />
-          </Route>
-        </Switch>
-      </Router>
+      <AuthProvider>
+        <Router>
+          <Chat />
+          <Switch>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route path="/login">
+              <LoginForm />
+            </Route>
+            <Route path="/signup">
+              <SignupForm />
+            </Route>
+          </Switch>
+        </Router>
+      </AuthProvider>
     );
   }
 }

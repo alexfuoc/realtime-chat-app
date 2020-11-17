@@ -55,7 +55,20 @@ class SignupForm extends Component {
       })
       .then((res) => {
         if (res.error) this.setState({ apiResponse: res.error });
-        else this.setState({ apiResponse: res.message });
+        else {
+          this.setState({ apiResponse: res.message });
+
+          fetch("http://localhost:3001/login/", {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(params),
+          })
+            .then((res) => res.text())
+            .then((res) => console.log(res));
+        }
       });
   }
 
