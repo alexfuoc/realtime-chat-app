@@ -30,7 +30,26 @@ io.on("connection", (socket) => {
     console.log("user disconnected");
   });
   socket.on("chat message", (msg) => {
-    io.emit("chat message", msg);
+    Message.create(
+      {
+        username: msg.username,
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        messageContent: msg.messageContent,
+        senderId: "674105423",
+      },
+      function (err, res) {
+        if (err) {
+          console.log(err);
+          socket.emit("error", { error: err });
+          return;
+        }
+        console.log(res);
+        io.emit("chat message", res);
+      }
+    );
   });
 });
 

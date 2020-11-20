@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "../App.css";
 import { Grid, Button, TextField } from "@material-ui/core";
+import { AuthConsumer } from "../contexts/Auth";
 
 export default class LoginForm extends Component {
   constructor(props) {
@@ -37,63 +38,65 @@ export default class LoginForm extends Component {
       body: JSON.stringify(params),
     })
       .then((res) => res.text())
-      .then((res) => console.log(res));
+      .then((res) => {
+        console.log(JSON.parse(res));
+      });
   }
 
   handleSubmit(event) {
     this.callAPI(this.state.email, this.state.password);
-    alert(
-      "An email was submitted: " +
-        this.state.email +
-        ", A password was submitted: " +
-        this.state.password
-    );
+
     event.preventDefault();
   }
 
   render() {
     return (
-      <div className="App">
-        <h2 className="title">Chatty Dorothy's</h2>
-        <p className="eggplant">Are you a friend of Dorothy?</p>
-        <form onSubmit={this.handleSubmit}>
-          <Grid
-            container
-            direction="column"
-            justify="flex-start"
-            alignItems="center"
-            spacing={3}
-          >
-            <Grid item>
-              <TextField
-                id="outlined-email"
-                name="email"
-                label="Email"
-                value={this.state.email}
-                onChange={this.handleInputChange}
-                variant="outlined"
-                p={2}
-              />
-            </Grid>
-            <Grid item>
-              <TextField
-                id="outlined-password"
-                name="password"
-                label="Password"
-                value={this.state.password}
-                onChange={this.handleInputChange}
-                variant="outlined"
-                p={2}
-              />
-            </Grid>
-            <Grid item>
-              <Button type="submit" value="Submit">
-                Log In
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
+      <AuthConsumer>
+        {({ isLoggedIn, login, logout, user }) => (
+          <div className="App">
+            <h2 className="title">Chatty Dorothy's</h2>
+            <p className="eggplant">Are you a friend of Dorothy?</p>
+            {user && <p>{user._id}</p>}
+            <form onSubmit={this.handleSubmit}>
+              <Grid
+                container
+                direction="column"
+                justify="flex-start"
+                alignItems="center"
+                spacing={3}
+              >
+                <Grid item>
+                  <TextField
+                    id="outlined-email"
+                    name="email"
+                    label="Email"
+                    value={this.state.email}
+                    onChange={this.handleInputChange}
+                    variant="outlined"
+                    p={2}
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    id="outlined-password"
+                    name="password"
+                    label="Password"
+                    value={this.state.password}
+                    onChange={this.handleInputChange}
+                    variant="outlined"
+                    p={2}
+                  />
+                </Grid>
+                <Grid item>
+                  <Button type="submit" value="Submit">
+                    Log In
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          </div>
+        )}
+      </AuthConsumer>
     );
   }
 }

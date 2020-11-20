@@ -21,6 +21,7 @@ var indexRouter = require("./routes/index");
 var loginRouter = require("./routes/login");
 var usersRouter = require("./routes/users");
 var testAPIRouter = require("./routes/testAPI");
+var messageRouter = require("./routes/messages");
 
 var app = express();
 
@@ -66,6 +67,7 @@ app.use("/", indexRouter);
 app.use("/login", loginRouter);
 app.use("/users", usersRouter);
 app.use("/testAPI", testAPIRouter);
+app.use("/messages", messageRouter);
 
 app.get("/authrequired", (req, res) => {
   console.log("Inside GET /authrequired callback");

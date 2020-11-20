@@ -11,26 +11,20 @@ import SignupForm from "./components/signUp";
 import Chat from "./components/chatbox";
 import Home from "./components/home";
 import { AuthProvider, AuthConsumer } from "./contexts/Auth";
+import chatbox from "./components/chatbox";
 
-// function PrivateRoute({ children, ...rest }) {
-//   return (
-//     <Route
-//       {...rest}
-//       render={({ location }) =>
-//         auth.user ? (
-//           children
-//         ) : (
-//           <Redirect
-//             to={{
-//               pathname: "/login",
-//               state: { from: location },
-//             }}
-//           />
-//         )
-//       }
-//     />
-//   );
-// }
+const ProtectedRoute = ({ component: Component, ...rest }) => (
+  <AuthConsumer>
+    {({ isLoggedIn }) => (
+      <Route
+        render={(props) =>
+          isLoggedIn ? <Component {...props} /> : <Redirect to="/login" />
+        }
+        {...rest}
+      />
+    )}
+  </AuthConsumer>
+);
 
 class App extends Component {
   constructor(props) {
@@ -41,19 +35,6 @@ class App extends Component {
       loginState: false,
       signUpState: false,
     };
-    this.loggedIn = this.loggedIn(this);
-  }
-
-  loggedIn() {
-    fetch("http://localhost:3001/authrequired", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.text())
-      .then((res) => console.log(res));
   }
 
   componentDidMount() {}
@@ -61,8 +42,8 @@ class App extends Component {
   render() {
     return (
       <AuthProvider>
+        <Chat />
         <Router>
-          <Chat />
           <Switch>
             <Route exact path="/">
               <Home />
@@ -73,6 +54,7 @@ class App extends Component {
             <Route path="/signup">
               <SignupForm />
             </Route>
+            <ProtectedRoute component={Chat} path="/chat" />
           </Switch>
         </Router>
       </AuthProvider>

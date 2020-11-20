@@ -13,6 +13,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
 import io from "socket.io-client";
+import { FormHelperText } from "@material-ui/core";
 
 const classes = (theme) => ({
   headerMessage: {
@@ -42,33 +43,6 @@ const classes = (theme) => ({
     padding: "10px",
   },
 });
-
-const messages = [
-  {
-    username: "Alex",
-    ts: new Date().toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
-    messageContent: "Hi, how are you?",
-  },
-  {
-    username: "Not Alex ",
-    ts: new Date().toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
-    messageContent: "Good! how are you?",
-  },
-  {
-    username: "Alex",
-    ts: new Date().toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
-    messageContent: "Good as well!",
-  },
-];
 
 class Chat extends Component {
   constructor(props) {
@@ -124,6 +98,21 @@ class Chat extends Component {
       messageContent: "Good as well!",
     });
     this.setState({ socket });
+
+    fetch("http://localhost:3001/messages", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.text())
+      .then((res) => {
+        var messages = JSON.parse(res);
+
+        this.setState({ messages: messages.reverse() });
+        // console.log(messages);
+      });
   }
 
   render() {
@@ -192,7 +181,7 @@ function MessageList({ sender, messages, classes }) {
   return (
     <List className={classes.messageArea}>
       {messages.map((message, index) => {
-        const { username, ts, messageContent } = message;
+        const { username, timestamp, messageContent } = message;
         return (
           <ListItem key={index}>
             <Grid container>
@@ -212,7 +201,7 @@ function MessageList({ sender, messages, classes }) {
               <Grid item xs={12}>
                 <ListItemText
                   align={sender == username ? "right" : "left"}
-                  secondary={ts.toString()}
+                  secondary={timestamp}
                 ></ListItemText>
               </Grid>
             </Grid>
