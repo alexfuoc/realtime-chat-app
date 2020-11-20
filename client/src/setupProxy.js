@@ -4,7 +4,7 @@ module.exports = function (app) {
   app.use(
     '/socket.io/',
     createProxyMiddleware({
-      target: 'http://localhost:3001/socket.io/',
+      target: '/socket.io/',
       changeOrigin: true,
     })
   );
