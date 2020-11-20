@@ -7,6 +7,7 @@
 var app = require("../app");
 var debug = require("debug")("server:server");
 var http = require("http");
+var Message = require("../models/messages");
 
 /**
  * Get port from environment and store in Express.
@@ -20,6 +21,37 @@ app.set("port", port);
  */
 
 var server = http.createServer(app);
+
+var io = require("socket.io")(server);
+
+io.on("connection", (socket) => {
+  console.log("a user connected");
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+  socket.on("chat message", (msg) => {
+    Message.create(
+      {
+        username: msg.username,
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        messageContent: msg.messageContent,
+        senderId: "674105423",
+      },
+      function (err, res) {
+        if (err) {
+          console.log(err);
+          socket.emit("error", { error: err });
+          return;
+        }
+        console.log(res);
+        io.emit("chat message", res);
+      }
+    );
+  });
+});
 
 /**
  * Listen on provided port, on all network interfaces.

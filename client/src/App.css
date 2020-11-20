@@ -1,5 +1,8 @@
 .App {
   text-align: center;
+}
+
+.html {
   background-color: #f5dfcc;
 }
 
@@ -22,4 +25,14 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.padding {
+  padding: 2%;
 }
