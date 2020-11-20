@@ -37,7 +37,7 @@ class SignupForm extends Component {
       password,
     };
 
-    fetch("http://localhost:3001/login/signup/", {
+    fetch("/login/signup/", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -58,7 +58,7 @@ class SignupForm extends Component {
         else {
           this.setState({ apiResponse: res.message });
 
-          fetch("http://localhost:3001/login/", {
+          fetch("/login/", {
             method: "POST",
             headers: {
               Accept: "application/json",

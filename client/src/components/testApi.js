@@ -5,7 +5,7 @@ class Api extends Component {
   }
 
   callAPI() {
-    fetch("http://localhost:3001/testAPI")
+    fetch("/testAPI")
       .then((res) => res.text())
       .then((res) => this.setState({ apiResponse: res }));
   }

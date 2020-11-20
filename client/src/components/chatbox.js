@@ -99,7 +99,7 @@ class Chat extends Component {
     });
     this.setState({ socket });
 
-    fetch("http://localhost:3001/messages", {
+    fetch("/messages", {
       method: "GET",
       headers: {
         Accept: "application/json",

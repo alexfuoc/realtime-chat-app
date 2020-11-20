@@ -29,7 +29,7 @@ export default class LoginForm extends Component {
       password,
     };
 
-    fetch("http://localhost:3001/login/", {
+    fetch("/login/", {
       method: "POST",
       headers: {
         Accept: "application/json",
