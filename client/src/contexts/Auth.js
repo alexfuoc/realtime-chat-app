@@ -3,18 +3,19 @@ import React from "react";
 const AuthContext = React.createContext();
 
 class AuthProvider extends React.Component {
-  state = {
-    isLoggedIn: false,
-    user: null,
-  };
-
   constructor() {
     super();
+    this.state = {
+      isLoggedIn: false,
+      user: null,
+    };
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
   }
 
   login(user) {
+    console.log("Inside Auth Context.. User logged in");
+    console.log(user);
     this.setState({
       isLoggedIn: true,
       user: user,
@@ -22,7 +23,7 @@ class AuthProvider extends React.Component {
   }
 
   logout() {
-    this.setState({ isLoggedIn: false });
+    this.setState({ isLoggedIn: false, user: null });
   }
 
   render() {

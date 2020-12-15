@@ -7,12 +7,10 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import Avatar from "@material-ui/core/Avatar";
-import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
 import io from "socket.io-client";
+import { AuthConsumer } from "../contexts/Auth";
 import { FormHelperText } from "@material-ui/core";
 
 const classes = (theme) => ({
@@ -50,7 +48,7 @@ class Chat extends Component {
 
     this.state = {
       messageInput: "",
-      username: Math.random(),
+      username: null,
       socket: null,
       messages: [],
     };
@@ -67,14 +65,19 @@ class Chat extends Component {
   }
 
   handleSubmitMessage() {
-    this.state.socket.emit("chat message", {
-      username: this.state.username,
-      ts: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      messageContent: this.state.messageInput,
-    });
+    if (this.props.isLoggedIn) {
+      this.state.socket.emit("chat message", {
+        username: this.props.user.username,
+        ts: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        messageContent: this.state.messageInput,
+      });
+      this.setState({ username: this.props.user.username, messageInput: "" });
+    } else {
+      alert("Please Sign In.");
+    }
   }
 
   recievedMessage = (msg) => {
@@ -88,14 +91,6 @@ class Chat extends Component {
     socket.on("chat message", (msg) => {
       console.log("Recieved a new message!");
       this.recievedMessage(msg);
-    });
-    socket.emit("chat message", {
-      username: "tester1",
-      ts: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      messageContent: "Good as well!",
     });
     this.setState({ socket });
 
@@ -157,7 +152,22 @@ class Chat extends Component {
   }
 }
 
-export default withStyles(classes)(Chat);
+const Chatbox = (props) => (
+  <AuthConsumer>
+    {({ user, login, logout, isLoggedIn }) => {
+      return (
+        <Chat
+          {...props}
+          user={user}
+          login={login}
+          logout={logout}
+          isLogginIn={isLoggedIn}
+        />
+      );
+    }}
+  </AuthConsumer>
+);
+export default withStyles(classes)(Chatbox);
 
 function MessageList({ sender, messages, classes }) {
   if (messages.length == 0) {

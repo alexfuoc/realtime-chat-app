@@ -11,18 +11,33 @@ import SignupForm from "./components/signUp";
 import Chat from "./components/chatbox";
 import Home from "./components/home";
 import { AuthProvider, AuthConsumer } from "./contexts/Auth";
-import chatbox from "./components/chatbox";
 
 const ProtectedRoute = ({ component: Component, ...rest }) => (
   <AuthConsumer>
     {({ isLoggedIn }) => (
       <Route
         render={(props) =>
-          isLoggedIn ? <Component {...props} /> : <Redirect to="/login" />
+          isLoggedIn ? <Component {...props} /> : <Redirect to="/" />
         }
         {...rest}
       />
     )}
+  </AuthConsumer>
+);
+
+const ChatBox = (props) => (
+  <AuthConsumer>
+    {({ user, login, logout, isLoggedIn }) => {
+      return (
+        <Chat
+          {...props}
+          user={user}
+          login={login}
+          logout={logout}
+          isLoggedIn={isLoggedIn}
+        />
+      );
+    }}
   </AuthConsumer>
 );
 
@@ -42,7 +57,7 @@ class App extends Component {
   render() {
     return (
       <AuthProvider>
-        <Chat />
+        <ChatBox />
         <Router>
           <Switch>
             <Route exact path="/">
@@ -54,7 +69,7 @@ class App extends Component {
             <Route path="/signup">
               <SignupForm />
             </Route>
-            <ProtectedRoute component={Chat} path="/chat" />
+            <ProtectedRoute component={ChatBox} path="/chat" />
           </Switch>
         </Router>
       </AuthProvider>

@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import "../App.css";
 import { Grid, Button, TextField } from "@material-ui/core";
 import { AuthConsumer } from "../contexts/Auth";
+import { Redirect } from "react-router-dom";
 
-export default class LoginForm extends Component {
+class LoginForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +40,9 @@ export default class LoginForm extends Component {
     })
       .then((res) => res.text())
       .then((res) => {
-        console.log(JSON.parse(res));
+        let response = JSON.parse(res);
+        console.log(response);
+        this.props.login(response.user);
       });
   }
 
@@ -50,53 +53,67 @@ export default class LoginForm extends Component {
   }
 
   render() {
+    var { user } = this.props;
+
     return (
-      <AuthConsumer>
-        {({ isLoggedIn, login, logout, user }) => (
-          <div className="App">
-            <h2 className="title">Chatty Dorothy's</h2>
-            <p className="eggplant">Are you a friend of Dorothy?</p>
-            {user && <p>{user._id}</p>}
-            <form onSubmit={this.handleSubmit}>
-              <Grid
-                container
-                direction="column"
-                justify="flex-start"
-                alignItems="center"
-                spacing={3}
-              >
-                <Grid item>
-                  <TextField
-                    id="outlined-email"
-                    name="email"
-                    label="Email"
-                    value={this.state.email}
-                    onChange={this.handleInputChange}
-                    variant="outlined"
-                    p={2}
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    id="outlined-password"
-                    name="password"
-                    label="Password"
-                    value={this.state.password}
-                    onChange={this.handleInputChange}
-                    variant="outlined"
-                    p={2}
-                  />
-                </Grid>
-                <Grid item>
-                  <Button type="submit" value="Submit">
-                    Log In
-                  </Button>
-                </Grid>
-              </Grid>
-            </form>
-          </div>
-        )}
-      </AuthConsumer>
+      <div className="App">
+        <h2 className="title">Chatty Dorothy's</h2>
+        <p className="eggplant">Are you a friend of Dorothy?</p>
+        {user && <p>{user.username}</p>}
+        <form onSubmit={this.handleSubmit}>
+          <Grid
+            container
+            direction="column"
+            justify="flex-start"
+            alignItems="center"
+            spacing={3}
+          >
+            <Grid item>
+              <TextField
+                id="outlined-email"
+                name="email"
+                label="Email"
+                value={this.state.email}
+                onChange={this.handleInputChange}
+                variant="outlined"
+                p={2}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                id="outlined-password"
+                name="password"
+                label="Password"
+                value={this.state.password}
+                onChange={this.handleInputChange}
+                variant="outlined"
+                p={2}
+              />
+            </Grid>
+            <Grid item>
+              <Button type="submit" value="Submit">
+                Log In
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
     );
   }
 }
+
+export default (props) => (
+  <AuthConsumer>
+    {({ user, login, logout, isLoggedIn }) => {
+      return (
+        <LoginForm
+          {...props}
+          user={user}
+          login={login}
+          logout={logout}
+          isLogginIn={isLoggedIn}
+        />
+      );
+    }}
+  </AuthConsumer>
+);
